@@ -17,6 +17,7 @@ def register_middlewares(app: FastAPI) -> None:
         request: Request,
         call_next,
     ):
+        print("Origin:", request.headers.get("origin"))
         request_id = str(uuid.uuid4())[:8]
 
         start = time.perf_counter()

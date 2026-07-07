@@ -6,6 +6,7 @@ from app.middleware import register_middlewares
 from config.settings import settings
 from fastapi.middleware.cors import CORSMiddleware
 
+print("Allowed Origins:", settings.ALLOWED_ORIGINS)
 setup_logging()
 app = FastAPI(
     title=settings.APP_NAME,
