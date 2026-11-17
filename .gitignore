@@ -1,13 +1,31 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
 *.tsbuildinfo
-
-frontend/node_modules/
-frontend/dist/
-frontend/*.tsbuildinfo
 frontend/vite.config.js
 frontend/vite.config.d.ts
 
+# Python
 backend/.venv/
+.venv/
 __pycache__/
+*.pyc
 .pytest_cache/
+.ruff_cache/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Archives and local backups
+*.zip
+
+# macOS
+.DS_Store
+Icon?
+
+# Editors
+.idea/
