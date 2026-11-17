@@ -1,6 +1,7 @@
 import logging
 
 from schemas.router import RouterResponse
+from services.errors import DocumentError
 from workflows import (
     contract_workflow,
     resume_workflow,
@@ -23,7 +24,10 @@ def dispatch_workflow(
     """
 
     if not router_response.supported:
-        raise ValueError("Unsupported document.")
+        raise DocumentError(
+            "This document type is not supported yet. "
+            "Try a contract or a resume."
+        )
 
     workflow = WORKFLOWS.get(router_response.workflow)
 

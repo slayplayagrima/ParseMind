@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from schemas.api import APIResponse
+from services.errors import DocumentError
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,23 @@ def register_exception_handlers(app: FastAPI) -> None:
 
         return JSONResponse(
             status_code=exc.status_code,
+            content=response.model_dump(),
+        )
+
+    @app.exception_handler(DocumentError)
+    async def document_exception_handler(
+        request: Request,
+        exc: DocumentError,
+    ):
+        logger.warning("Rejected document: %s", exc)
+
+        response = APIResponse(
+            success=False,
+            error=str(exc),
+        )
+
+        return JSONResponse(
+            status_code=400,
             content=response.model_dump(),
         )
 

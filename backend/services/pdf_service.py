@@ -2,6 +2,10 @@ import logging
 import re
 
 import fitz
+
+from config.settings import settings
+from services.errors import DocumentError
+
 logger = logging.getLogger(__name__)
 
 def _validate_pdf(pdf_bytes: bytes) -> None:
@@ -10,7 +14,7 @@ def _validate_pdf(pdf_bytes: bytes) -> None:
     """
 
     if not pdf_bytes:
-        raise ValueError("Uploaded PDF is empty.")
+        raise DocumentError("Uploaded PDF is empty.")
 
 def _clean_text(text: str) -> str:
     """
@@ -36,8 +40,8 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
         Cleaned text extracted from all pages.
 
     Raises:
-        ValueError: If the PDF is empty, invalid, encrypted,
-                    or contains no extractable text.
+        DocumentError: If the PDF is empty, invalid, encrypted,
+                       too long, or contains no extractable text.
     """
 
     _validate_pdf(pdf_bytes)
@@ -47,12 +51,18 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
 
     except Exception as e:
         logger.exception("Failed to open PDF.")
-        raise ValueError("Invalid or corrupted PDF file.") from e
+        raise DocumentError("Invalid or corrupted PDF file.") from e
 
     try:
 
         if document.needs_pass:
-            raise ValueError("Password-protected PDFs are not supported.")
+            raise DocumentError("Password-protected PDFs are not supported.")
+
+        if document.page_count > settings.MAX_PDF_PAGES:
+            raise DocumentError(
+                f"PDF has {document.page_count} pages. "
+                f"The limit is {settings.MAX_PDF_PAGES} pages."
+            )
 
         extracted_pages = []
 
@@ -70,7 +80,7 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
         cleaned_text = _clean_text(full_text)
 
         if not cleaned_text:
-            raise ValueError(
+            raise DocumentError(
                 "No readable text found in the PDF. "
                 "The document may be scanned or image-only."
             )
