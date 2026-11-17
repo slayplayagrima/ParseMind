@@ -1,13 +1,17 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 from config.settings import settings
 from schemas.api import APIResponse
 from services.document_processor import process_document
+from services.rate_limiter import enforce_rate_limit
 
 router = APIRouter()
 
 
-@router.post("/analyze")
+@router.post(
+    "/analyze",
+    dependencies=[Depends(enforce_rate_limit)],
+)
 async def analyze_document(
     file: UploadFile = File(...),
 ):

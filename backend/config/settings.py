@@ -54,6 +54,30 @@ class Settings:
         )
     )
 
+    UPSTASH_REDIS_REST_URL = os.getenv(
+        "UPSTASH_REDIS_REST_URL",
+        "",
+    ).rstrip("/")
+
+    UPSTASH_REDIS_REST_TOKEN = os.getenv(
+        "UPSTASH_REDIS_REST_TOKEN",
+        "",
+    )
+
+    RATE_LIMIT_REQUESTS = int(
+        os.getenv(
+            "RATE_LIMIT_REQUESTS",
+            "10",
+        )
+    )
+
+    RATE_LIMIT_WINDOW_SECONDS = int(
+        os.getenv(
+            "RATE_LIMIT_WINDOW_SECONDS",
+            "3600",
+        )
+    )
+
     origins = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000,https://parsemind-production.up.railway.app,https://parsemind.vercel.app"
