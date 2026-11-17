@@ -6,13 +6,11 @@ from app.middleware import register_middlewares
 from config.settings import settings
 from fastapi.middleware.cors import CORSMiddleware
 
-print("Allowed Origins:", settings.ALLOWED_ORIGINS)
 setup_logging()
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION,
 )
-print(settings.ALLOWED_ORIGINS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -23,7 +21,6 @@ app.add_middleware(
 register_middlewares(app)
 register_exception_handlers(app)
 app.include_router(router)
-
 
 @app.get("/health")
 def health():
