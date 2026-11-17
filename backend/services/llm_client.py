@@ -6,7 +6,6 @@ from config.settings import settings
 from groq import Groq
 
 logger = logging.getLogger(__name__)
-print("Loaded key:", settings.GROQ_API_KEY)
 DEFAULT_MODEL = settings.GROQ_MODEL
 
 API_KEY = settings.GROQ_API_KEY
