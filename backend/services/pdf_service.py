@@ -73,30 +73,27 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
             if page_text:
                 extracted_pages.append(page_text)
 
+    finally:
         document.close()
 
-        full_text = "\n".join(extracted_pages)
+    full_text = "\n".join(extracted_pages)
 
-        cleaned_text = _clean_text(full_text)
+    cleaned_text = _clean_text(full_text)
 
-        if not cleaned_text:
-            raise DocumentError(
-                "No readable text found in the PDF. "
-                "The document may be scanned or image-only."
-            )
-
-        logger.info(
-            "Successfully extracted %d characters.",
-            len(cleaned_text),
+    if not cleaned_text:
+        raise DocumentError(
+            "No readable text found in the PDF. "
+            "The document may be scanned or image-only."
         )
 
-        return cleaned_text
+    logger.info(
+        "Successfully extracted %d characters.",
+        len(cleaned_text),
+    )
 
-    except Exception:
+    return cleaned_text
 
-        document.close()
 
-        raise
 __all__ = [
     "extract_text_from_pdf",
 ]
