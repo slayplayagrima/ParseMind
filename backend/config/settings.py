@@ -46,7 +46,7 @@ class Settings:
 )
 
     ALLOWED_ORIGINS = [
-    origin.strip()
+    origin.strip().strip('"').strip("'").rstrip("/")
     for origin in origins.split(",")
     if origin.strip()
 ]
