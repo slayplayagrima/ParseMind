@@ -18,6 +18,8 @@ import { Button } from '../../components/buttons/Button';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { useAnalysis } from '../../context/AnalysisContext';
 
+const MAX_UPLOAD_MB = 10;
+
 interface UploadFormValues {
   file: File | null;
 }
@@ -48,6 +50,10 @@ export const UploadPage = () => {
   const validateFile = useCallback((file: File): string | null => {
     if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
       return 'Only PDF files are supported.';
+    }
+
+    if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      return `File is too large. The limit is ${MAX_UPLOAD_MB} MB.`;
     }
 
     return null;
@@ -126,7 +132,7 @@ export const UploadPage = () => {
                 {isDragActive ? 'Drop your PDF here' : 'Drag and drop documents here'}
               </h2>
               <p className="mt-4 max-w-md text-muted">
-                Limit 50MB per file. PDF is active now; DOCX, TXT, and JSON are coming soon.
+                Limit {MAX_UPLOAD_MB} MB per file. PDF is active now; DOCX, TXT, and JSON are coming soon.
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Button variant="contained" sx={{ minWidth: 150, px: 4, py: 1.4 }}>
