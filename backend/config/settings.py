@@ -40,6 +40,20 @@ class Settings:
         "llama-3.3-70b-versatile",
     )
 
+    MAX_UPLOAD_MB = int(
+        os.getenv(
+            "MAX_UPLOAD_MB",
+            "10",
+        )
+    )
+
+    MAX_PDF_PAGES = int(
+        os.getenv(
+            "MAX_PDF_PAGES",
+            "50",
+        )
+    )
+
     origins = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000,https://parsemind-production.up.railway.app,https://parsemind.vercel.app"
