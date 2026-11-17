@@ -27,6 +27,7 @@ def register_exception_handlers(app: FastAPI) -> None:
         return JSONResponse(
             status_code=exc.status_code,
             content=response.model_dump(),
+            headers=exc.headers,
         )
 
     @app.exception_handler(DocumentError)
