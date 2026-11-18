@@ -1,0 +1,16 @@
+target-version = "py312"
+line-length = 100
+
+[lint]
+# E/W: style errors, F: pyflakes (unused imports, undefined names),
+# I: import sorting, B: likely bugs, UP: modern syntax, SIM: simplifications
+select = ["E", "W", "F", "I", "B", "UP", "SIM"]
+# Pydantic generic models keep the Generic[T] form for readability.
+ignore = ["UP046"]
+
+[lint.per-file-ignores]
+# Smoke scripts print results on purpose and run top-level code.
+"scripts/**" = ["E402"]
+
+[lint.isort]
+known-first-party = ["agents", "app", "config", "prompts", "schemas", "services", "skills", "utils", "workflows", "tests"]
