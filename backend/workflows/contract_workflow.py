@@ -11,6 +11,7 @@ from skills.extract_entities import extract_entities
 from skills.parse_contract import parse_contract
 from skills.risk_detector import detect_risks
 from skills.summarize import summarize
+from workflows.parallel import run_parallel
 
 logger = logging.getLogger(__name__)
 
@@ -24,15 +25,25 @@ def run(document_text: str) -> WorkflowResponse:
 
     start = time.perf_counter()
 
-    summary = summarize(document_text)
+    results = run_parallel(
+        {
+            "summary": lambda: summarize(document_text),
+            "contract": lambda: parse_contract(document_text),
+            "entities": lambda: extract_entities(document_text),
+            "clauses": lambda: extract_clauses(document_text),
+            "risks": lambda: detect_risks(document_text),
+        }
+    )
 
-    contract_response = parse_contract(document_text)
+    summary = results["summary"]
 
-    entities_response = extract_entities(document_text)
+    contract_response = results["contract"]
 
-    clauses_response = extract_clauses(document_text)
+    entities_response = results["entities"]
 
-    risks_response = detect_risks(document_text)
+    clauses_response = results["clauses"]
+
+    risks_response = results["risks"]
 
     contract: ContractResponse = contract_response.result
 

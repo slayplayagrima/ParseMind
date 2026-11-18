@@ -9,6 +9,7 @@ from services.llm_client import DEFAULT_MODEL
 from skills.extract_entities import extract_entities
 from skills.parse_resume import parse_resume
 from skills.summarize import summarize
+from workflows.parallel import run_parallel
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +23,19 @@ def run(document_text: str) -> WorkflowResponse:
 
     start = time.perf_counter()
 
-    summary = summarize(document_text)
+    results = run_parallel(
+        {
+            "summary": lambda: summarize(document_text),
+            "resume": lambda: parse_resume(document_text),
+            "entities": lambda: extract_entities(document_text),
+        }
+    )
 
-    resume_response = parse_resume(document_text)
+    summary = results["summary"]
 
-    entities_response = extract_entities(document_text)
+    resume_response = results["resume"]
+
+    entities_response = results["entities"]
 
     resume: ResumeResponse = resume_response.result
 
