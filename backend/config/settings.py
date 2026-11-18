@@ -40,6 +40,20 @@ class Settings:
         "llama-3.3-70b-versatile",
     )
 
+    LLM_TIMEOUT_SECONDS = float(
+        os.getenv(
+            "LLM_TIMEOUT_SECONDS",
+            "30",
+        )
+    )
+
+    LLM_MAX_RETRIES = int(
+        os.getenv(
+            "LLM_MAX_RETRIES",
+            "2",
+        )
+    )
+
     MAX_UPLOAD_MB = int(
         os.getenv(
             "MAX_UPLOAD_MB",

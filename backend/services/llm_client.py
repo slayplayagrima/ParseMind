@@ -3,7 +3,7 @@ import logging
 from typing import Any
 from config.settings import settings
 
-from groq import Groq
+from groq import Groq, RateLimitError
 
 logger = logging.getLogger(__name__)
 DEFAULT_MODEL = settings.GROQ_MODEL
@@ -35,7 +35,13 @@ def get_client() -> Groq:
 
         logger.info("Initializing Groq client...")
 
-        _client = Groq(api_key=API_KEY)
+        # The SDK retries connection errors, 429s and 5xx responses
+        # with exponential backoff, up to max_retries times.
+        _client = Groq(
+            api_key=API_KEY,
+            timeout=settings.LLM_TIMEOUT_SECONDS,
+            max_retries=settings.LLM_MAX_RETRIES,
+        )
 
     return _client
 
@@ -78,7 +84,7 @@ def _chat_completion(
 
         message = str(exc)
 
-        if "rate_limit" in message.lower():
+        if isinstance(exc, RateLimitError):
             raise RuntimeError(
             "RATE_LIMIT_EXCEEDED"
             ) from exc
