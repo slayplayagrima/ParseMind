@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi.concurrency import run_in_threadpool
 
 from config.settings import settings
 from schemas.api import APIResponse
@@ -41,7 +42,9 @@ async def analyze_document(
             detail="The uploaded file is not a valid PDF.",
         )
 
-    result = process_document(pdf_bytes)
+    # The pipeline makes blocking Groq and PyMuPDF calls, so run it in a
+    # worker thread to keep the event loop free for other requests.
+    result = await run_in_threadpool(process_document, pdf_bytes)
 
     return APIResponse(
         success=True,
