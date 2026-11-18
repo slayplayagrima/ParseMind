@@ -1,4 +1,5 @@
 import logging
+import time
 
 from schemas.resume import ResumeResponse
 from schemas.skill import SkillMetadata, SkillResponse
@@ -6,8 +7,6 @@ from services.llm_client import generate_json_response
 from prompts.resume import RESUME_PARSE_PROMPT
 logger = logging.getLogger(__name__)
 
-
-import time
 
 
 def parse_resume(document_text: str) -> SkillResponse[ResumeResponse]:

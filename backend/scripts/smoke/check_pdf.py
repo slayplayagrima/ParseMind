@@ -1,5 +1,3 @@
-import services
-from services.pdf_service import extract_text_from_pdf
 from services.pdf_service import extract_text_from_pdf
 
 with open("sample.pdf", "rb") as file:
