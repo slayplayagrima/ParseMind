@@ -1,3 +1,9 @@
+import os
+
+# Settings require a Groq key at import time. Tests never call Groq,
+# so a placeholder is enough. Must be set before the app is imported.
+os.environ.setdefault("GROQ_API_KEY", "test-key")
+
 import fitz
 import pytest
 from fastapi.testclient import TestClient
