@@ -9,6 +9,14 @@ from schemas.skill import SkillMetadata, SkillResponse
 from workflows import contract_workflow, resume_workflow
 
 
+def fresh(result):
+    """
+    Return a copy of a model so one test can't mutate another's fixture.
+    """
+
+    return result.model_copy(deep=True) if hasattr(result, "model_copy") else result
+
+
 def skill_response(result, name="fake"):
     return SkillResponse(
         metadata=SkillMetadata(skill=name, success=True, execution_time_ms=1),
@@ -75,7 +83,7 @@ def recording(result, seen_threads):
     def skill(document_text: str):
         assert document_text == "contract text"
         seen_threads.add(threading.get_ident())
-        return skill_response(result.model_copy(deep=True) if hasattr(result, "model_copy") else result)
+        return skill_response(fresh(result))
 
     return skill
 
@@ -120,7 +128,7 @@ def test_resume_workflow_combines_all_skills(monkeypatch, seen_threads):
     def text(result):
         def skill(document_text: str):
             seen_threads.add(threading.get_ident())
-            return skill_response(result.model_copy(deep=True) if hasattr(result, "model_copy") else result)
+            return skill_response(fresh(result))
 
         return skill
 
