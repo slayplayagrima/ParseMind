@@ -29,3 +29,7 @@ Icon?
 
 # Editors
 .idea/
+
+# Test coverage
+.coverage
+htmlcov/
