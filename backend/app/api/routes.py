@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 
@@ -14,7 +16,7 @@ router = APIRouter()
     dependencies=[Depends(enforce_rate_limit)],
 )
 async def analyze_document(
-    file: UploadFile = File(...),
+    file: Annotated[UploadFile, File()],
 ):
     """
     Analyze an uploaded PDF document.
