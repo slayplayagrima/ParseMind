@@ -28,9 +28,7 @@ Document:
 {document_text}
 """
 
-    entities = EntityResponse.model_validate(
-        generate_json_response(prompt)
-    )
+    entities = EntityResponse.model_validate(generate_json_response(prompt))
 
     elapsed = int((time.perf_counter() - start) * 1000)
 

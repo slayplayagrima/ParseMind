@@ -5,7 +5,6 @@ from schemas.resume import ResumeResponse
 from schemas.resume_workflow import ResumeWorkflowResult
 from schemas.workflow import WorkflowMetadata, WorkflowResponse
 from services.llm_client import DEFAULT_MODEL
-
 from skills.extract_entities import extract_entities
 from skills.parse_resume import parse_resume
 from skills.summarize import summarize
@@ -41,9 +40,7 @@ def run(document_text: str) -> WorkflowResponse:
 
     resume.summary = summary.result
 
-    execution_time = int(
-        (time.perf_counter() - start) * 1000
-    )
+    execution_time = int((time.perf_counter() - start) * 1000)
 
     metadata = WorkflowMetadata(
         workflow="resume_workflow",

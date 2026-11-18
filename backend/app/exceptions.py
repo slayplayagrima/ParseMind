@@ -59,10 +59,7 @@ def register_exception_handlers(app: FastAPI) -> None:
 
         if message == "RATE_LIMIT_EXCEEDED":
             status = 429
-            error = (
-                "AI service rate limit exceeded. "
-                "Please try again later."
-            )
+            error = "AI service rate limit exceeded. Please try again later."
 
         logger.exception("Unhandled exception.", exc_info=exc)
 

@@ -72,7 +72,7 @@ def test_boolean_parsing(monkeypatch):
 def test_origins_are_normalized(monkeypatch):
     monkeypatch.setenv(
         "ALLOWED_ORIGINS",
-        ' "https://a.example.com/" , \'https://b.example.com\',,',
+        " \"https://a.example.com/\" , 'https://b.example.com',,",
     )
 
     assert load().ALLOWED_ORIGINS == [

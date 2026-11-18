@@ -1,9 +1,10 @@
 import json
 import logging
 from typing import Any
-from config.settings import settings
 
 from groq import Groq, RateLimitError
+
+from config.settings import settings
 
 logger = logging.getLogger(__name__)
 DEFAULT_MODEL = settings.GROQ_MODEL
@@ -26,12 +27,9 @@ def get_client() -> Groq:
     global _client
 
     if _client is None:
-
         if not API_KEY:
             logger.error("GROQ_API_KEY not found.")
-            raise RuntimeError(
-                "GROQ_API_KEY is missing. Check your environment."
-            )
+            raise RuntimeError("GROQ_API_KEY is missing. Check your environment.")
 
         logger.info("Initializing Groq client...")
 
@@ -77,21 +75,14 @@ def _chat_completion(
         return content.strip()
 
     except Exception as exc:
-
-        logger.exception(
-            "Error communicating with Groq."
-    )
+        logger.exception("Error communicating with Groq.")
 
         message = str(exc)
 
         if isinstance(exc, RateLimitError):
-            raise RuntimeError(
-            "RATE_LIMIT_EXCEEDED"
-            ) from exc
+            raise RuntimeError("RATE_LIMIT_EXCEEDED") from exc
 
-        raise RuntimeError(
-            f"LLM request failed: {message}"
-        ) from exc
+        raise RuntimeError(f"LLM request failed: {message}") from exc
 
 
 def generate_text_response(prompt: str) -> str:
@@ -133,20 +124,14 @@ Do not include explanations.
     response = response.strip()
 
     if response.startswith("```"):
-        response = (
-            response.replace("```json", "")
-            .replace("```", "")
-            .strip()
-        )
+        response = response.replace("```json", "").replace("```", "").strip()
 
     try:
         return json.loads(response)
 
     except json.JSONDecodeError as exc:
         logger.exception("Model returned invalid JSON.")
-        raise ValueError(
-            f"Invalid JSON returned by model:\n{response}"
-        ) from exc
+        raise ValueError(f"Invalid JSON returned by model:\n{response}") from exc
 
 
 __all__ = [

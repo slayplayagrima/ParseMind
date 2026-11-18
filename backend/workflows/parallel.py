@@ -13,12 +13,6 @@ def run_parallel(tasks: dict[str, Callable[[], Any]]) -> dict[str, Any]:
     """
 
     with ThreadPoolExecutor(max_workers=len(tasks)) as executor:
-        futures = {
-            name: executor.submit(task)
-            for name, task in tasks.items()
-        }
+        futures = {name: executor.submit(task) for name, task in tasks.items()}
 
-        return {
-            name: future.result()
-            for name, future in futures.items()
-        }
+        return {name: future.result() for name, future in futures.items()}

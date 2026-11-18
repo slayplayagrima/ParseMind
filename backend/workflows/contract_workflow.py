@@ -5,7 +5,6 @@ from schemas.contract import ContractResponse
 from schemas.contract_workflow import ContractWorkflowResult
 from schemas.workflow import WorkflowMetadata, WorkflowResponse
 from services.llm_client import DEFAULT_MODEL
-
 from skills.clause_extractor import extract_clauses
 from skills.extract_entities import extract_entities
 from skills.parse_contract import parse_contract
@@ -53,14 +52,9 @@ def run(document_text: str) -> WorkflowResponse:
 
     contract.risks = risks_response.result
 
-    contract.recommendations = [
-        risk.recommendation
-        for risk in risks_response.result
-    ]
+    contract.recommendations = [risk.recommendation for risk in risks_response.result]
 
-    execution_time = int(
-        (time.perf_counter() - start) * 1000
-    )
+    execution_time = int((time.perf_counter() - start) * 1000)
 
     metadata = WorkflowMetadata(
         workflow="contract_workflow",

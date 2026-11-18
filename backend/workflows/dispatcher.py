@@ -24,17 +24,12 @@ def dispatch_workflow(
     """
 
     if not router_response.supported:
-        raise DocumentError(
-            "This document type is not supported yet. "
-            "Try a contract or a resume."
-        )
+        raise DocumentError("This document type is not supported yet. Try a contract or a resume.")
 
     workflow = WORKFLOWS.get(router_response.workflow)
 
     if workflow is None:
-        raise ValueError(
-            f"Workflow '{router_response.workflow}' not found."
-        )
+        raise ValueError(f"Workflow '{router_response.workflow}' not found.")
 
     logger.info(
         "Dispatching to '%s'.",

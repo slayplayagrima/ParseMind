@@ -5,18 +5,11 @@ from groq import Groq
 
 load_dotenv()
 
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
-)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 response = client.chat.completions.create(
     model=os.getenv("GROQ_MODEL"),
-    messages=[
-        {
-            "role": "user",
-            "content": "Reply with exactly: Groq is working"
-        }
-    ]
+    messages=[{"role": "user", "content": "Reply with exactly: Groq is working"}],
 )
 
 print(response.choices[0].message.content)

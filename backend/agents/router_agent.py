@@ -6,6 +6,7 @@ from services.llm_client import generate_json_response
 
 logger = logging.getLogger(__name__)
 
+
 def classify_document(
     document_text: str,
 ) -> RouterResponse:
@@ -28,10 +29,10 @@ Document:
     router = RouterResponse.model_validate(response)
 
     logger.info(
-    "Document classified as '%s' (workflow=%s, confidence=%.2f)",
-    router.document_type,
-    router.workflow,
-    router.confidence,
+        "Document classified as '%s' (workflow=%s, confidence=%.2f)",
+        router.document_type,
+        router.workflow,
+        router.confidence,
     )
 
     return router

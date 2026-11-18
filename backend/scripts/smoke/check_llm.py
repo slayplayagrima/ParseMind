@@ -5,9 +5,7 @@ from services.llm_client import (
 
 print("Testing text generation...\n")
 
-text = generate_text_response(
-    "Reply with exactly: ContractMind AI is ready."
-)
+text = generate_text_response("Reply with exactly: ContractMind AI is ready.")
 
 print(text)
 

@@ -1,8 +1,8 @@
+import logging
+
 from agents.router_agent import classify_document
 from services.pdf_service import extract_text_from_pdf
 from workflows.dispatcher import dispatch_workflow
-
-import logging
 
 logger = logging.getLogger(__name__)
 

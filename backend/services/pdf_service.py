@@ -8,6 +8,7 @@ from services.errors import DocumentError
 
 logger = logging.getLogger(__name__)
 
+
 def _validate_pdf(pdf_bytes: bytes) -> None:
     """
     Validate the uploaded PDF before processing.
@@ -15,6 +16,7 @@ def _validate_pdf(pdf_bytes: bytes) -> None:
 
     if not pdf_bytes:
         raise DocumentError("Uploaded PDF is empty.")
+
 
 def _clean_text(text: str) -> str:
     """
@@ -28,6 +30,7 @@ def _clean_text(text: str) -> str:
     text = re.sub(r"\n{3,}", "\n\n", text)
 
     return text.strip()
+
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
     """
@@ -54,20 +57,17 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
         raise DocumentError("Invalid or corrupted PDF file.") from e
 
     try:
-
         if document.needs_pass:
             raise DocumentError("Password-protected PDFs are not supported.")
 
         if document.page_count > settings.MAX_PDF_PAGES:
             raise DocumentError(
-                f"PDF has {document.page_count} pages. "
-                f"The limit is {settings.MAX_PDF_PAGES} pages."
+                f"PDF has {document.page_count} pages. The limit is {settings.MAX_PDF_PAGES} pages."
             )
 
         extracted_pages = []
 
         for page in document:
-
             page_text = page.get_text("text", sort=True)
 
             if page_text:
@@ -82,8 +82,7 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
 
     if not cleaned_text:
         raise DocumentError(
-            "No readable text found in the PDF. "
-            "The document may be scanned or image-only."
+            "No readable text found in the PDF. The document may be scanned or image-only."
         )
 
     logger.info(

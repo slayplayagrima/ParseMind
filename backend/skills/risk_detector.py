@@ -1,10 +1,10 @@
 import logging
 import time
 
+from prompts.risks import RISK_DETECTION_PROMPT
 from schemas.contract import Risk
 from schemas.skill import SkillMetadata, SkillResponse
 from services.llm_client import generate_json_response
-from prompts.risks import RISK_DETECTION_PROMPT
 
 logger = logging.getLogger(__name__)
 
@@ -30,10 +30,7 @@ Contract:
 
     response = generate_json_response(prompt)
 
-    risks = [
-        Risk.model_validate(item)
-        for item in response["risks"]
-    ]
+    risks = [Risk.model_validate(item) for item in response["risks"]]
 
     elapsed = int((time.perf_counter() - start) * 1000)
 

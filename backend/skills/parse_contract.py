@@ -1,12 +1,13 @@
 import logging
 import time
 
+from prompts.contract import CONTRACT_PARSE_PROMPT
 from schemas.contract import ContractResponse
 from schemas.skill import SkillMetadata, SkillResponse
 from services.llm_client import generate_json_response
-from prompts.contract import CONTRACT_PARSE_PROMPT
 
 logger = logging.getLogger(__name__)
+
 
 def parse_contract(
     document_text: str,
