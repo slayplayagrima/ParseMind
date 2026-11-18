@@ -1,10 +1,8 @@
-from urllib import response
+import logging
+
 from prompts.router import ROUTER_PROMPT
-from schemas import router
 from schemas.router import RouterResponse
 from services.llm_client import generate_json_response
-
-import logging
 
 logger = logging.getLogger(__name__)
 
