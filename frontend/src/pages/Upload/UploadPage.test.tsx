@@ -25,10 +25,10 @@ const pdf = (name: string, sizeInBytes = 1024) => {
 };
 
 describe('UploadPage', () => {
-  it('shows the 10 MB limit', () => {
+  it('shows the 4 MB limit', () => {
     renderPage();
 
-    expect(screen.getByText(/Limit 10 MB per file/)).toBeInTheDocument();
+    expect(screen.getByText(/Limit 4 MB per file/)).toBeInTheDocument();
   });
 
   it('accepts a PDF under the size limit', async () => {
@@ -40,12 +40,12 @@ describe('UploadPage', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
-  it('rejects a PDF over 10 MB before uploading it', async () => {
+  it('rejects a PDF over 4 MB before uploading it', async () => {
     const input = renderPage();
 
-    await userEvent.upload(input, pdf('huge.pdf', 11 * 1024 * 1024));
+    await userEvent.upload(input, pdf('huge.pdf', 5 * 1024 * 1024));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('File is too large. The limit is 10 MB.');
+    expect(await screen.findByRole('alert')).toHaveTextContent('File is too large. The limit is 4 MB.');
   });
 
   it('explains why a non-PDF file is rejected', async () => {

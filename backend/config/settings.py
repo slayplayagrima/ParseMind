@@ -43,7 +43,9 @@ class Settings(BaseSettings):
 
     LLM_MAX_RETRIES: int = Field(default=2, ge=0)
 
-    MAX_UPLOAD_MB: int = Field(default=10, gt=0)
+    # Vercel Functions reject request bodies over 4.5 MB, so uploads are
+    # capped at 4 MB to leave room for multipart overhead.
+    MAX_UPLOAD_MB: int = Field(default=4, gt=0)
 
     MAX_PDF_PAGES: int = Field(default=50, gt=0)
 
