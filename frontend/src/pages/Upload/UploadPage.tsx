@@ -10,7 +10,7 @@ import {
   UploadCloud,
 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,11 +60,16 @@ export const UploadPage = () => {
   }, []);
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       const [file] = acceptedFiles;
       clearError();
 
       if (!file) {
+        // The dropzone filters by type before onDrop runs, so a rejected
+        // file would otherwise be ignored without any feedback.
+        if (fileRejections.length > 0) {
+          setValidationError('Only PDF files are supported.');
+        }
         return;
       }
 
