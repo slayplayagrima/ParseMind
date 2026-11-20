@@ -72,3 +72,25 @@ npm run dev
 ```
 
 The app runs at http://localhost:5173.
+
+## Environment variables
+
+Backend (`backend/.env`):
+
+| Variable | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `GROQ_API_KEY` | Yes | | Groq API key |
+| `GROQ_MODEL` | No | `llama-3.3-70b-versatile` | Model used by every skill |
+| `LLM_TIMEOUT_SECONDS` | No | `30` | Timeout per LLM call |
+| `LLM_MAX_RETRIES` | No | `2` | Retries with backoff on errors and rate limits |
+| `MAX_UPLOAD_MB` | No | `4` | Upload size limit |
+| `MAX_PDF_PAGES` | No | `50` | Page limit per PDF |
+| `UPSTASH_REDIS_REST_URL` | No | | Enables rate limiting |
+| `UPSTASH_REDIS_REST_TOKEN` | No | | Enables rate limiting |
+| `RATE_LIMIT_REQUESTS` | No | `10` | Analyses allowed per IP per window |
+| `RATE_LIMIT_WINDOW_SECONDS` | No | `3600` | Rate limit window |
+| `ALLOWED_ORIGINS` | No | localhost + production | Comma-separated CORS origins |
+
+Frontend (`frontend/.env.local`): `VITE_API_URL`, the backend URL.
+
+Settings are validated at startup, so a missing key or invalid value stops the app with a clear error.
