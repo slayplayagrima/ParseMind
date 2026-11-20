@@ -112,3 +112,14 @@ npm run coverage
 ```
 
 Tests run offline: the Groq API and Upstash are faked, so they're fast and free. Live API checks live in `backend/scripts/smoke`.
+
+## Deployment
+
+Both parts deploy to Vercel from this repository as two projects:
+
+| Project | Root directory | Notes |
+| --- | --- | --- |
+| Frontend | `frontend` | Set `VITE_API_URL` to the backend URL |
+| Backend | `backend` | FastAPI is detected from `app/main.py`; config in `backend/vercel.json` |
+
+Vercel Functions cap request bodies at 4.5 MB, which is why uploads are limited to 4 MB. Add the backend environment variables in the Vercel project settings, and redeploy after changing them.
