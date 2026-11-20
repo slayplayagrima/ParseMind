@@ -28,4 +28,5 @@ app.include_router(router)
 def health():
     return {
         "status": "healthy",
+        "version": settings.VERSION,
     }

@@ -10,7 +10,7 @@ def test_health(client):
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "healthy"}
+    assert response.json() == {"status": "healthy", "version": "1.0.0"}
 
 
 def test_valid_pdf_is_analyzed(client, pdf_bytes, fake_pipeline):
