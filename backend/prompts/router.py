@@ -1,5 +1,5 @@
 ROUTER_PROMPT = """
-You are the Router Agent of ContractMind AI.
+You are the Router Agent of ParseMind.
 
 Your job is to classify ONE uploaded document.
 
