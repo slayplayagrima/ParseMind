@@ -94,3 +94,21 @@ Backend (`backend/.env`):
 Frontend (`frontend/.env.local`): `VITE_API_URL`, the backend URL.
 
 Settings are validated at startup, so a missing key or invalid value stops the app with a clear error.
+
+## Testing
+
+Every push and pull request runs the full suite on GitHub Actions.
+
+```bash
+# Backend: 40 tests, ~93% coverage
+cd backend
+ruff check . && ruff format --check .
+pytest --cov=app --cov=services --cov=workflows --cov=config
+
+# Frontend: 20 tests
+cd frontend
+npm run lint
+npm run coverage
+```
+
+Tests run offline: the Groq API and Upstash are faked, so they're fast and free. Live API checks live in `backend/scripts/smoke`.
