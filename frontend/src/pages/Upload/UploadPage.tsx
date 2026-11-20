@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/buttons/Button';
@@ -40,12 +40,12 @@ const recentHistory = [
 export const UploadPage = () => {
   const navigate = useNavigate();
   const { analyzeFile, clearAnalysis, clearError, isAnalyzing, progress } = useAnalysis();
-  const { setValue, watch } = useForm<UploadFormValues>({
+  const { control, setValue } = useForm<UploadFormValues>({
     defaultValues: {
       file: null,
     },
   });
-  const selectedFile = watch('file');
+  const selectedFile = useWatch({ control, name: 'file' });
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const validateFile = useCallback((file: File): string | null => {
