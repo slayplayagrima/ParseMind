@@ -1,21 +1,9 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { analyzeDocument } from '../api/documents';
 import type { AnalysisEnvelope } from '../types/workflow';
 import { getErrorMessage } from '../utils/typeGuards';
-
-interface AnalysisContextValue {
-  analysis: AnalysisEnvelope | null;
-  error: string | null;
-  fileName: string | null;
-  isAnalyzing: boolean;
-  progress: number;
-  analyzeFile: (file: File) => Promise<void>;
-  clearAnalysis: () => void;
-  clearError: () => void;
-}
-
-const AnalysisContext = createContext<AnalysisContextValue | null>(null);
+import { AnalysisContext, type AnalysisContextValue } from './analysisContextValue';
 
 export const AnalysisProvider = ({ children }: { children: React.ReactNode }) => {
   const [analysis, setAnalysis] = useState<AnalysisEnvelope | null>(null);
@@ -70,14 +58,4 @@ export const AnalysisProvider = ({ children }: { children: React.ReactNode }) =>
   );
 
   return <AnalysisContext.Provider value={value}>{children}</AnalysisContext.Provider>;
-};
-
-export const useAnalysis = () => {
-  const context = useContext(AnalysisContext);
-
-  if (!context) {
-    throw new Error('useAnalysis must be used inside AnalysisProvider.');
-  }
-
-  return context;
 };

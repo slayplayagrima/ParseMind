@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/buttons/Button';
 import { ErrorState } from '../../components/common/ErrorState';
 import { EmptyState } from '../../components/common/EmptyState';
-import { useAnalysis } from '../../context/AnalysisContext';
+import { useAnalysis } from '../../context/useAnalysis';
 
 const loadingSteps = [
   'Uploading',
