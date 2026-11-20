@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/buttons/Button';
 import { StatusBadge } from '../../components/common/StatusBadge';
-import { useAnalysis } from '../../context/AnalysisContext';
+import { useAnalysis } from '../../context/useAnalysis';
 
 // Matches the backend limit, which is set by Vercel's 4.5 MB request cap.
 const MAX_UPLOAD_MB = 4;
