@@ -37,3 +37,13 @@ flowchart LR
 - `backend/skills` holds single-purpose LLM tasks, with prompts in `backend/prompts`.
 - `backend/services` holds the LLM client, PDF extraction and rate limiter.
 - `frontend/src` holds the React app: upload, loading and results pages.
+
+## Tech stack
+
+| Layer | Tools |
+| --- | --- |
+| Frontend | React 18, TypeScript, Vite, MUI, Tailwind CSS, React Router, Axios |
+| Backend | Python 3.13, FastAPI, Pydantic, pydantic-settings, PyMuPDF |
+| AI | Groq API, Llama 3.3 70B |
+| Infrastructure | Vercel (frontend and serverless backend), Upstash Redis |
+| Quality | pytest, Vitest, Testing Library, ruff, ESLint, GitHub Actions |
