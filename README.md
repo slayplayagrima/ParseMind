@@ -47,3 +47,28 @@ flowchart LR
 | AI | Groq API, Llama 3.3 70B |
 | Infrastructure | Vercel (frontend and serverless backend), Upstash Redis |
 | Quality | pytest, Vitest, Testing Library, ruff, ESLint, GitHub Actions |
+
+## Running locally
+
+**Backend**
+
+```bash
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-dev.txt
+cp .env.example .env   # then add your GROQ_API_KEY
+uvicorn app.main:app --reload
+```
+
+The API runs at http://127.0.0.1:8000, with interactive docs at http://127.0.0.1:8000/docs.
+
+**Frontend**
+
+```bash
+cd frontend
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+The app runs at http://localhost:5173.
