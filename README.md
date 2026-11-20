@@ -14,3 +14,26 @@ AI-powered document intelligence. Upload a contract or a resume as a PDF and Par
 - **Entity extraction.** People, organizations, dates, money, locations and technologies across any document.
 - **Fast by design.** Each workflow runs its AI skills in parallel, so an analysis takes about as long as its slowest step.
 - **Safe for public use.** Upload size and page limits, PDF signature checks, per-IP rate limiting, and readable error messages.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    U[React frontend<br/>Vercel] -->|POST /analyze| A[FastAPI<br/>Vercel Functions]
+    A --> RL[Rate limiter<br/>Upstash Redis]
+    A --> P[PDF text extraction<br/>PyMuPDF]
+    P --> R[Router agent]
+    R -->|contract| CW[Contract workflow]
+    R -->|resume| RW[Resume workflow]
+    CW --> S1[summarize · parse · entities · clauses · risks]
+    RW --> S2[summarize · parse · entities]
+    S1 --> G[Groq LLM<br/>Llama 3.3 70B]
+    S2 --> G
+```
+
+- `backend/app` holds the FastAPI app, routes, middleware and error handling.
+- `backend/agents` holds the router agent that picks a workflow.
+- `backend/workflows` holds the contract and resume pipelines, which fan out to skills in parallel.
+- `backend/skills` holds single-purpose LLM tasks, with prompts in `backend/prompts`.
+- `backend/services` holds the LLM client, PDF extraction and rate limiter.
+- `frontend/src` holds the React app: upload, loading and results pages.
