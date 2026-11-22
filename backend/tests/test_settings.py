@@ -29,7 +29,8 @@ def load() -> Settings:
 def test_defaults():
     settings = load()
 
-    assert settings.GROQ_MODEL == "llama-3.3-70b-versatile"
+    assert settings.GROQ_MODEL == "openai/gpt-oss-120b"
+    assert settings.LLM_MAX_TOKENS == 8192
     assert settings.MAX_UPLOAD_MB == 4
     assert settings.DEBUG is False
     assert "https://parsemind.vercel.app" in settings.ALLOWED_ORIGINS

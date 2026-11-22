@@ -37,11 +37,15 @@ class Settings(BaseSettings):
 
     GROQ_API_KEY: str = Field(min_length=1)
 
-    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    GROQ_MODEL: str = "openai/gpt-oss-120b"
 
     LLM_TIMEOUT_SECONDS: float = Field(default=30, gt=0)
 
     LLM_MAX_RETRIES: int = Field(default=2, ge=0)
+
+    # Reasoning models spend part of this budget thinking before they
+    # answer, so it is set well above the size of the JSON we expect back.
+    LLM_MAX_TOKENS: int = Field(default=8192, gt=0)
 
     # Vercel Functions reject request bodies over 4.5 MB, so uploads are
     # capped at 4 MB to leave room for multipart overhead.

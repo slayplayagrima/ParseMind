@@ -12,7 +12,6 @@ DEFAULT_MODEL = settings.GROQ_MODEL
 API_KEY = settings.GROQ_API_KEY
 
 DEFAULT_TEMPERATURE = 0.0
-DEFAULT_MAX_TOKENS = 4096
 
 JSONDict = dict[str, Any]
 
@@ -64,7 +63,7 @@ def _chat_completion(
                 }
             ],
             temperature=temperature,
-            max_tokens=DEFAULT_MAX_TOKENS,
+            max_tokens=settings.LLM_MAX_TOKENS,
         )
 
         content = response.choices[0].message.content
