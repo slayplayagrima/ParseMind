@@ -230,7 +230,7 @@ def test_dispatcher_sends_invoices_to_invoice_workflow(monkeypatch):
 
 def test_dispatcher_rejects_types_without_a_workflow():
     with pytest.raises(DocumentError, match="Report documents are not supported yet"):
-        dispatcher.dispatch_workflow(route("report", "report_workflow"), "doc")
+        dispatcher.dispatch_workflow(route("report", "made_up_workflow"), "doc")
 
 
 def test_dispatcher_rejects_unsupported_documents():
