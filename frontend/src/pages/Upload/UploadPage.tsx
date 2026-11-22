@@ -3,7 +3,6 @@ import {
   BarChart3,
   ChevronRight,
   Cloud,
-  Code2,
   FileJson,
   FileText,
   Sparkles,
@@ -48,7 +47,6 @@ const fileFormats = [
   { label: 'PDF', icon: FileText, available: true },
   { label: 'DOCX', icon: FileText, available: true },
   { label: 'TXT', icon: FileText, available: true },
-  { label: 'JSON', icon: Code2, available: false },
 ];
 
 const recentHistory = [
@@ -133,8 +131,8 @@ export const UploadPage = () => {
           Upload a professional document for AI-powered analysis.
         </h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-secondary">
-          High-fidelity extraction and structural analysis for resumes, legal contracts, invoices and other
-          professional documents.
+          High-fidelity extraction and structural analysis for contracts, resumes, invoices, reports and
+          policies.
         </p>
       </header>
 

@@ -52,8 +52,8 @@ const supportedHandlers = [
   { icon: Gavel, title: 'Contracts', description: 'Legal & procurement', active: true },
   { icon: Badge, title: 'Resumes', description: 'HR & recruiting', active: true },
   { icon: ReceiptText, title: 'Invoices', description: 'Finance & billing', active: true },
-  { icon: FileText, title: 'Research', description: 'Academic & whitepapers', active: false },
-  { icon: ShieldCheck, title: 'Medical', description: 'Coming Soon', active: false },
+  { icon: FileText, title: 'Reports', description: 'Research & business', active: true },
+  { icon: ShieldCheck, title: 'Policies', description: 'Compliance & HR', active: true },
   { icon: Building2, title: 'Real Estate', description: 'Coming Soon', active: false },
 ];
 

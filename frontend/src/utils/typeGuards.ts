@@ -1,6 +1,8 @@
 import type {
   ContractWorkflowResult,
   InvoiceWorkflowResult,
+  PolicyWorkflowResult,
+  ReportWorkflowResult,
   ResumeWorkflowResult,
   WorkflowResponse,
 } from '../types/workflow';
@@ -22,6 +24,16 @@ export const hasInvoiceResult = (
   response: WorkflowResponse,
 ): response is WorkflowResponse<InvoiceWorkflowResult> =>
   isRecord(response.result) && isRecord(response.result.invoice);
+
+export const hasReportResult = (
+  response: WorkflowResponse,
+): response is WorkflowResponse<ReportWorkflowResult> =>
+  isRecord(response.result) && isRecord(response.result.report);
+
+export const hasPolicyResult = (
+  response: WorkflowResponse,
+): response is WorkflowResponse<PolicyWorkflowResult> =>
+  isRecord(response.result) && isRecord(response.result.policy);
 
 export const getErrorMessage = (error: unknown): string => {
   if (isRecord(error)) {

@@ -4,6 +4,8 @@ import { StatusBadge } from '../common/StatusBadge';
 
 interface RiskCardProps {
   risks: ContractRisk[];
+  title?: string;
+  emptyLabel?: string;
 }
 
 const severityTone: Record<RiskSeverity, 'success' | 'warning' | 'danger'> = {
@@ -13,9 +15,9 @@ const severityTone: Record<RiskSeverity, 'success' | 'warning' | 'danger'> = {
   critical: 'danger',
 };
 
-export const RiskCard = ({ risks }: RiskCardProps) => (
+export const RiskCard = ({ risks, title = 'Risk Assessment', emptyLabel = '-' }: RiskCardProps) => (
   <section className="bento-card p-8">
-      <h2 className="text-lg font-semibold text-brand">Risk Assessment</h2>
+      <h2 className="text-lg font-semibold text-brand">{title}</h2>
       <div className="mt-6 space-y-4">
         {risks.length > 0 ? (
           risks.map((risk) => (
@@ -29,7 +31,7 @@ export const RiskCard = ({ risks }: RiskCardProps) => (
             </article>
           ))
         ) : (
-          <p className="text-sm text-muted">-</p>
+          <p className="text-sm text-muted">{emptyLabel}</p>
         )}
       </div>
   </section>

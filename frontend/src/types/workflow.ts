@@ -2,6 +2,8 @@ export type WorkflowKind =
   | "resume_workflow"
   | "contract_workflow"
   | "invoice_workflow"
+  | "report_workflow"
+  | "policy_workflow"
   | string;
 
 export interface WorkflowMetadata {
@@ -169,8 +171,63 @@ export interface InvoiceWorkflowResult {
   entities: EntityResponse;
 }
 
+export interface ReportMetric {
+  name: string;
+  value: string;
+  context: string | null;
+}
+
+export interface ReportResponse {
+  title: string | null;
+  report_type: string | null;
+  authors: string[];
+  organization: string | null;
+  publication_date: string | null;
+  purpose: string | null;
+  key_findings: string[];
+  metrics: ReportMetric[];
+  conclusions: string[];
+  recommendations: string[];
+  limitations: string[];
+  summary: string;
+}
+
+export interface ReportWorkflowResult {
+  report: ReportResponse;
+  entities: EntityResponse;
+}
+
+export interface PolicyRule {
+  title: string;
+  description: string;
+}
+
+export interface PolicyResponse {
+  title: string | null;
+  policy_type: string | null;
+  organization: string | null;
+  effective_date: string | null;
+  version: string | null;
+  scope: string | null;
+  applies_to: string[];
+  rules: PolicyRule[];
+  obligations: string[];
+  prohibited: string[];
+  penalties: string[];
+  // Same shape as contract risks, so the risk card can show them.
+  compliance_gaps: ContractRisk[];
+  summary: string;
+}
+
+export interface PolicyWorkflowResult {
+  policy: PolicyResponse;
+  entities: EntityResponse;
+}
+
 export type WorkflowResult =
   | ContractWorkflowResult
   | ResumeWorkflowResult
   | InvoiceWorkflowResult
+  | ReportWorkflowResult
+  | PolicyWorkflowResult
   | Record<string, unknown>;
