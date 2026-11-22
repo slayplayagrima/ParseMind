@@ -57,6 +57,19 @@ class Settings(BaseSettings):
     # 200k characters is roughly 50 dense pages.
     MAX_DOCUMENT_CHARS: int = Field(default=200_000, gt=0)
 
+    # Scanned PDFs are read with OCR.space when a key is set.
+    # Get a free key at https://ocr.space/ocrapi/freekey
+    OCR_SPACE_API_KEY: str = ""
+
+    OCR_SPACE_URL: str = "https://api.ocr.space/parse/image"
+
+    OCR_LANGUAGE: str = "eng"
+
+    OCR_TIMEOUT_SECONDS: float = Field(default=30, gt=0)
+
+    # Each page is one OCR request, so scanned PDFs get a lower page limit.
+    OCR_MAX_PAGES: int = Field(default=10, gt=0)
+
     UPSTASH_REDIS_REST_URL: str = ""
 
     UPSTASH_REDIS_REST_TOKEN: str = ""

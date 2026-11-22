@@ -4,6 +4,7 @@ import fitz
 
 from config.settings import settings
 from services.errors import DocumentError
+from services.ocr_service import MAX_IMAGE_BYTES, ocr_enabled, ocr_pages
 from services.text_cleaning import clean_text
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,25 @@ def _validate_pdf(pdf_bytes: bytes) -> None:
 
     if not pdf_bytes:
         raise DocumentError("Uploaded PDF is empty.")
+
+
+# Tried in order until a page fits under the OCR upload limit.
+RENDER_DPIS = (200, 150, 100, 72)
+
+
+def _render_page(page: fitz.Page) -> bytes:
+    """
+    Render a page to a JPEG small enough for the OCR service.
+    """
+
+    image = b""
+
+    for dpi in RENDER_DPIS:
+        image = page.get_pixmap(dpi=dpi).tobytes("jpeg", jpg_quality=80)
+        if len(image) <= MAX_IMAGE_BYTES:
+            break
+
+    return image
 
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
@@ -31,6 +51,9 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
     Raises:
         DocumentError: If the PDF is empty, invalid, encrypted,
                        too long, or contains no extractable text.
+
+    Scanned PDFs have no text layer. When OCR is configured, their pages
+    are rendered to images and read by OCR instead.
     """
 
     _validate_pdf(pdf_bytes)
@@ -59,12 +82,25 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
             if page_text:
                 extracted_pages.append(page_text)
 
+        page_images: list[bytes] = []
+
+        if not clean_text("\n".join(extracted_pages)) and ocr_enabled():
+            if document.page_count > settings.OCR_MAX_PAGES:
+                raise DocumentError(
+                    f"Scanned PDFs can have up to {settings.OCR_MAX_PAGES} pages. "
+                    f"This one has {document.page_count}."
+                )
+
+            page_images = [_render_page(page) for page in document]
+
     finally:
         document.close()
 
-    full_text = "\n".join(extracted_pages)
-
-    cleaned_text = clean_text(full_text)
+    if page_images:
+        cleaned_text = clean_text(ocr_pages(page_images))
+        logger.info("Read %d characters with OCR.", len(cleaned_text))
+    else:
+        cleaned_text = clean_text("\n".join(extracted_pages))
 
     if not cleaned_text:
         raise DocumentError(
