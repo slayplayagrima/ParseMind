@@ -12,6 +12,7 @@ AI-powered document intelligence. Upload a contract, a resume or an invoice as a
 - **Contract analysis.** Parties, dates, payment terms, obligations, key clauses, risks rated by severity, and recommendations.
 - **Resume analysis.** Candidate details, education, experience, projects, skills, strengths, improvements and an ATS score.
 - **Invoice analysis.** Vendor, customer, line items, tax and totals, plus exact checks that flag line items, subtotals or totals that don't add up.
+- **Scanned documents.** PDFs without a text layer are read with OCR (OCR.space) when a key is set. Text PDFs never leave the server for OCR.
 - **Entity extraction.** People, organizations, dates, money, locations and technologies across any document.
 - **Fast by design.** Each workflow runs its AI skills in parallel, so an analysis takes about as long as its slowest step.
 - **Safe for public use.** Upload size, page and length limits, file type checks on the actual bytes, per-IP rate limiting, and readable error messages.
@@ -91,6 +92,10 @@ Backend (`backend/.env`):
 | `MAX_UPLOAD_MB` | No | `4` | Upload size limit |
 | `MAX_PDF_PAGES` | No | `50` | Page limit per PDF |
 | `MAX_DOCUMENT_CHARS` | No | `200000` | Length limit for Word and text files |
+| `OCR_SPACE_API_KEY` | No | | Enables OCR for scanned PDFs ([free key](https://ocr.space/ocrapi/freekey)) |
+| `OCR_LANGUAGE` | No | `eng` | OCR language code |
+| `OCR_TIMEOUT_SECONDS` | No | `30` | Timeout per OCR page |
+| `OCR_MAX_PAGES` | No | `10` | Page limit for scanned PDFs |
 | `UPSTASH_REDIS_REST_URL` | No | | Enables rate limiting |
 | `UPSTASH_REDIS_REST_TOKEN` | No | | Enables rate limiting |
 | `RATE_LIMIT_REQUESTS` | No | `10` | Analyses allowed per IP per window |
@@ -106,7 +111,7 @@ Settings are validated at startup, so a missing key or invalid value stops the a
 Every push and pull request runs the full suite on GitHub Actions.
 
 ```bash
-# Backend: 97 tests
+# Backend: 109 tests
 cd backend
 ruff check . && ruff format --check .
 pytest --cov=app --cov=services --cov=workflows --cov=config
@@ -117,7 +122,7 @@ npm run lint
 npm run coverage
 ```
 
-Tests run offline: the Groq API and Upstash are faked, so they're fast and free. Live API checks live in `backend/scripts/smoke`.
+Tests run offline: the Groq API, OCR.space and Upstash are faked, so they're fast and free. Live API checks live in `backend/scripts/smoke`.
 
 ## Deployment
 
