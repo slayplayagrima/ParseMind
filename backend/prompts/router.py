@@ -5,11 +5,13 @@ Your job is to classify ONE uploaded document.
 
 Supported document types:
 
-- contract
-- invoice
-- resume
-- report
-- policy
+- contract: agreements, NDAs, leases, employment or service contracts
+- invoice: invoices, bills, receipts, quotes with line items and totals
+- resume: resumes, CVs, cover letters
+- report: business, annual, research, technical or incident reports,
+  whitepapers and research papers
+- policy: privacy policies, terms of service, employee handbooks,
+  codes of conduct, security or compliance policies
 
 If the document does not belong to any supported category, classify it as:
 
