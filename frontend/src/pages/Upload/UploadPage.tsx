@@ -21,14 +21,33 @@ import { useAnalysis } from '../../context/useAnalysis';
 // Matches the backend limit, which is set by Vercel's 4.5 MB request cap.
 const MAX_UPLOAD_MB = 4;
 
+const DOCX_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+// Matches the backend's supported types. The backend also checks the
+// file's bytes, so this is only for fast feedback.
+const ACCEPTED_TYPES = {
+  'application/pdf': ['.pdf'],
+  [DOCX_MIME]: ['.docx'],
+  'text/plain': ['.txt'],
+};
+
+const ACCEPTED_EXTENSIONS = Object.values(ACCEPTED_TYPES).flat();
+
+const UNSUPPORTED_MESSAGE = 'Only PDF, Word (.docx) and text (.txt) files are supported.';
+
+const fileExtension = (name: string) => {
+  const dot = name.lastIndexOf('.');
+  return dot === -1 ? '' : name.slice(dot).toLowerCase();
+};
+
 interface UploadFormValues {
   file: File | null;
 }
 
 const fileFormats = [
   { label: 'PDF', icon: FileText, available: true },
-  { label: 'DOCX', icon: FileText, available: false },
-  { label: 'TXT', icon: FileText, available: false },
+  { label: 'DOCX', icon: FileText, available: true },
+  { label: 'TXT', icon: FileText, available: true },
   { label: 'JSON', icon: Code2, available: false },
 ];
 
@@ -49,8 +68,8 @@ export const UploadPage = () => {
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const validateFile = useCallback((file: File): string | null => {
-    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-      return 'Only PDF files are supported.';
+    if (!ACCEPTED_EXTENSIONS.includes(fileExtension(file.name))) {
+      return UNSUPPORTED_MESSAGE;
     }
 
     if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
@@ -69,7 +88,7 @@ export const UploadPage = () => {
         // The dropzone filters by type before onDrop runs, so a rejected
         // file would otherwise be ignored without any feedback.
         if (fileRejections.length > 0) {
-          setValidationError('Only PDF files are supported.');
+          setValidationError(UNSUPPORTED_MESSAGE);
         }
         return;
       }
@@ -85,9 +104,7 @@ export const UploadPage = () => {
   );
 
   const { getInputProps, getRootProps, isDragActive } = useDropzone({
-    accept: {
-      'application/pdf': ['.pdf'],
-    },
+    accept: ACCEPTED_TYPES,
     maxFiles: 1,
     multiple: false,
     onDrop,
@@ -135,10 +152,10 @@ export const UploadPage = () => {
                 <UploadCloud size={46} strokeWidth={1.8} />
               </div>
               <h2 className="text-xl font-medium text-brand">
-                {isDragActive ? 'Drop your PDF here' : 'Drag and drop documents here'}
+                {isDragActive ? 'Drop your document here' : 'Drag and drop documents here'}
               </h2>
               <p className="mt-4 max-w-md text-muted">
-                Limit {MAX_UPLOAD_MB} MB per file. PDF is active now; DOCX, TXT, and JSON are coming soon.
+                Limit {MAX_UPLOAD_MB} MB per file. PDF, Word (.docx) and text (.txt) files are supported.
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Button variant="contained" sx={{ minWidth: 150, px: 4, py: 1.4 }}>
@@ -159,7 +176,7 @@ export const UploadPage = () => {
                     <p className="text-sm text-muted">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
                   </div>
                 </div>
-                <StatusBadge label="PDF selected" tone="success" />
+                <StatusBadge label={`${fileExtension(selectedFile.name).slice(1).toUpperCase() || 'File'} selected`} tone="success" />
               </div>
             ) : null}
 

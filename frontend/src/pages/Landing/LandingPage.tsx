@@ -97,7 +97,7 @@ export const LandingPage = () => (
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-container text-white">
                 <FileCheck2 size={22} />
               </div>
-              <span className="text-xs font-bold uppercase text-brand">PDF / DOCX</span>
+              <span className="text-xs font-bold uppercase text-brand">PDF / DOCX / TXT</span>
             </div>
 
             <div className="glass-card absolute left-1/2 top-1/2 z-20 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-lift">
@@ -175,7 +175,7 @@ export const LandingPage = () => (
         <h2 className="text-4xl font-bold tracking-[-0.02em] text-brand">The Architecture of Clarity</h2>
         <div className="mt-12 flex flex-col items-center justify-between gap-8 md:flex-row">
           {[
-            ['01. Upload', UploadCloud, 'Drop PDFs into the workspace.'],
+            ['01. Upload', UploadCloud, 'Drop a PDF, Word or text file.'],
             ['02. AI Router', Network, 'Classification and workflow assignment.'],
             ['03. Results', FileCheck2, 'Structured data delivered to dashboard.'],
           ].map(([title, Icon, description], index) => (

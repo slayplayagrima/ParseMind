@@ -82,7 +82,7 @@ export const LoadingPage = () => {
       <div className="px-4 py-16">
         <EmptyState
           title="No analysis in progress"
-          description="Upload a PDF to start document analysis."
+          description="Upload a document to start analysis."
           actionLabel="Go to Upload"
           onAction={() => navigate('/upload')}
         />

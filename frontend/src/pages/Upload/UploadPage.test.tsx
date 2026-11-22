@@ -48,12 +48,36 @@ describe('UploadPage', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('File is too large. The limit is 4 MB.');
   });
 
-  it('explains why a non-PDF file is rejected', async () => {
+  it.each([
+    ['resume.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'DOCX selected'],
+    ['invoice.txt', 'text/plain', 'TXT selected'],
+  ])('accepts %s', async (name, type, badge) => {
+    const input = renderPage();
+
+    await userEvent.upload(input, new File(['content'], name, { type }));
+
+    expect(await screen.findByText(name)).toBeInTheDocument();
+    expect(screen.getByText(badge)).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('explains why an unsupported file is rejected', async () => {
     const user = userEvent.setup({ applyAccept: false });
     const input = renderPage();
 
-    await user.upload(input, new File(['hello'], 'notes.txt', { type: 'text/plain' }));
+    await user.upload(input, new File(['png'], 'scan.png', { type: 'image/png' }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Only PDF files are supported.');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Only PDF, Word (.docx) and text (.txt) files are supported.',
+    );
+  });
+
+  it('rejects old .doc files even when the browser lets them through', async () => {
+    const user = userEvent.setup({ applyAccept: false });
+    const input = renderPage();
+
+    await user.upload(input, new File(['doc'], 'old.doc', { type: 'application/msword' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Only PDF, Word/);
   });
 });
