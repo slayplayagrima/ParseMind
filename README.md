@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/slayplayagrima/ParseMind/actions/workflows/ci.yml/badge.svg)](https://github.com/slayplayagrima/ParseMind/actions/workflows/ci.yml)
 
-AI-powered document intelligence. Upload a contract or a resume as a PDF and ParseMind classifies it, then extracts structured data, summaries, risks and recommendations in seconds.
+AI-powered document intelligence. Upload a contract, a resume or an invoice as a PDF and ParseMind classifies it, then extracts structured data, summaries, risks and recommendations in seconds.
 
 **Live app:** https://parsemind.vercel.app · **API:** https://parse-mind-haix.vercel.app/health
 
@@ -11,6 +11,7 @@ AI-powered document intelligence. Upload a contract or a resume as a PDF and Par
 - **Automatic document routing.** A router agent classifies each upload and sends it to the right workflow.
 - **Contract analysis.** Parties, dates, payment terms, obligations, key clauses, risks rated by severity, and recommendations.
 - **Resume analysis.** Candidate details, education, experience, projects, skills, strengths, improvements and an ATS score.
+- **Invoice analysis.** Vendor, customer, line items, tax and totals, plus exact checks that flag line items, subtotals or totals that don't add up.
 - **Entity extraction.** People, organizations, dates, money, locations and technologies across any document.
 - **Fast by design.** Each workflow runs its AI skills in parallel, so an analysis takes about as long as its slowest step.
 - **Safe for public use.** Upload size and page limits, PDF signature checks, per-IP rate limiting, and readable error messages.
@@ -25,15 +26,18 @@ flowchart LR
     P --> R[Router agent]
     R -->|contract| CW[Contract workflow]
     R -->|resume| RW[Resume workflow]
+    R -->|invoice| IW[Invoice workflow]
     CW --> S1[summarize · parse · entities · clauses · risks]
     RW --> S2[summarize · parse · entities]
     S1 --> G[Groq LLM<br/>GPT-OSS 120B]
+    IW --> S3[summarize · parse · entities<br/>+ totals check]
     S2 --> G
+    S3 --> G
 ```
 
 - `backend/app` holds the FastAPI app, routes, middleware and error handling.
 - `backend/agents` holds the router agent that picks a workflow.
-- `backend/workflows` holds the contract and resume pipelines, which fan out to skills in parallel.
+- `backend/workflows` holds the contract, resume and invoice pipelines, which fan out to skills in parallel.
 - `backend/skills` holds single-purpose LLM tasks, with prompts in `backend/prompts`.
 - `backend/services` holds the LLM client, PDF extraction and rate limiter.
 - `frontend/src` holds the React app: upload, loading and results pages.
@@ -101,12 +105,12 @@ Settings are validated at startup, so a missing key or invalid value stops the a
 Every push and pull request runs the full suite on GitHub Actions.
 
 ```bash
-# Backend: 40 tests, ~93% coverage
+# Backend: 65 tests
 cd backend
 ruff check . && ruff format --check .
 pytest --cov=app --cov=services --cov=workflows --cov=config
 
-# Frontend: 20 tests
+# Frontend: 27 tests
 cd frontend
 npm run lint
 npm run coverage
