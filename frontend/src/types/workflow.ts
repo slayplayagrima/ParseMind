@@ -1,6 +1,7 @@
 export type WorkflowKind =
   | "resume_workflow"
   | "contract_workflow"
+  | "invoice_workflow"
   | string;
 
 export interface WorkflowMetadata {
@@ -132,4 +133,44 @@ export interface ResumeWorkflowResult {
   entities: EntityResponse;
 }
 
-export type WorkflowResult = ContractWorkflowResult | ResumeWorkflowResult | Record<string, unknown>;
+export interface InvoiceParty {
+  name: string | null;
+  address: string | null;
+  email: string | null;
+  tax_id: string | null;
+}
+
+export interface LineItem {
+  description: string;
+  quantity: number | null;
+  unit_price: number | null;
+  amount: number | null;
+}
+
+export interface InvoiceResponse {
+  invoice_number: string | null;
+  issue_date: string | null;
+  due_date: string | null;
+  currency: string | null;
+  vendor: InvoiceParty;
+  customer: InvoiceParty;
+  line_items: LineItem[];
+  subtotal: number | null;
+  tax: number | null;
+  discount: number | null;
+  total: number | null;
+  payment_terms: string | null;
+  summary: string;
+  issues: string[];
+}
+
+export interface InvoiceWorkflowResult {
+  invoice: InvoiceResponse;
+  entities: EntityResponse;
+}
+
+export type WorkflowResult =
+  | ContractWorkflowResult
+  | ResumeWorkflowResult
+  | InvoiceWorkflowResult
+  | Record<string, unknown>;

@@ -6,6 +6,26 @@ export const fallback = (value: string | number | null | undefined): string => {
   return String(value);
 };
 
+export const formatMoney = (
+  value: number | null | undefined,
+  currency?: string | null,
+): string => {
+  if (value === null || value === undefined) {
+    return fallback(value);
+  }
+
+  if (currency) {
+    try {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value);
+    } catch {
+      // Not an ISO currency code: show the number with whatever the invoice said.
+      return `${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
+    }
+  }
+
+  return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
+
 export const titleCase = (value: string): string =>
   value
     .replace(/[_-]/g, ' ')

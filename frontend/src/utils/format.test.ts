@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { fallback, formatConfidence, formatMilliseconds, titleCase } from './format';
+import { fallback, formatConfidence, formatMilliseconds, formatMoney, titleCase } from './format';
 
 describe('fallback', () => {
   it('shows a dash for missing values', () => {
@@ -12,6 +12,22 @@ describe('fallback', () => {
   it('stringifies real values, including zero', () => {
     expect(fallback('Acme')).toBe('Acme');
     expect(fallback(0)).toBe('0');
+  });
+});
+
+describe('formatMoney', () => {
+  it('formats amounts in the invoice currency', () => {
+    expect(formatMoney(1180, 'USD')).toBe('$1,180.00');
+    expect(formatMoney(99.5, 'EUR')).toBe('€99.50');
+  });
+
+  it('falls back to a plain number for unknown or missing currencies', () => {
+    expect(formatMoney(1250, 'Rupees')).toBe('1,250.00 Rupees');
+    expect(formatMoney(1250, null)).toBe('1,250.00');
+  });
+
+  it('shows a dash when there is no amount', () => {
+    expect(formatMoney(null, 'USD')).toBe('—');
   });
 });
 

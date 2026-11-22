@@ -116,8 +116,8 @@ export const UploadPage = () => {
           Upload a professional document for AI-powered analysis.
         </h1>
         <p className="mt-5 max-w-3xl text-lg leading-8 text-secondary">
-          High-fidelity extraction and structural analysis for resumes, legal contracts, and complex professional
-          documents.
+          High-fidelity extraction and structural analysis for resumes, legal contracts, invoices and other
+          professional documents.
         </p>
       </header>
 

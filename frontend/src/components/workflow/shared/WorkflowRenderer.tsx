@@ -1,8 +1,9 @@
 import type { WorkflowResponse } from '../../../types/workflow';
 import { titleCase } from '../../../utils/format';
-import { hasContractResult, hasResumeResult } from '../../../utils/typeGuards';
+import { hasContractResult, hasInvoiceResult, hasResumeResult } from '../../../utils/typeGuards';
 import { EmptyState } from '../../common/EmptyState';
 import { ContractRenderer } from '../contract/ContractRenderer';
+import { InvoiceRenderer } from '../invoice/InvoiceRenderer';
 import { ResumeRenderer } from '../resume/ResumeRenderer';
 
 interface WorkflowRendererProps {
@@ -18,6 +19,10 @@ export const WorkflowRenderer = ({ response }: WorkflowRendererProps) => {
 
   if (workflow === "resume_workflow" && hasResumeResult(response)) {
     return <ResumeRenderer result={response.result} />;
+  }
+
+  if (workflow === "invoice_workflow" && hasInvoiceResult(response)) {
+    return <InvoiceRenderer result={response.result} />;
   }
 
   return (

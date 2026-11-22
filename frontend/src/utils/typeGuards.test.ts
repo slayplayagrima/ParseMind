@@ -1,19 +1,21 @@
 import { describe, expect, it } from 'vitest';
 
 import type { WorkflowResponse } from '../types/workflow';
-import { getErrorMessage, hasContractResult, hasResumeResult } from './typeGuards';
+import { getErrorMessage, hasContractResult, hasInvoiceResult, hasResumeResult } from './typeGuards';
 
 const response = (result: unknown) => ({ metadata: {}, result }) as unknown as WorkflowResponse;
 
 describe('result type guards', () => {
-  it('recognises contract and resume results', () => {
+  it('recognises contract, resume and invoice results', () => {
     expect(hasContractResult(response({ contract: {}, entities: {} }))).toBe(true);
     expect(hasResumeResult(response({ resume: {}, entities: {} }))).toBe(true);
+    expect(hasInvoiceResult(response({ invoice: {}, entities: {} }))).toBe(true);
   });
 
   it('rejects results of the other type', () => {
     expect(hasContractResult(response({ resume: {} }))).toBe(false);
     expect(hasResumeResult(response(null))).toBe(false);
+    expect(hasInvoiceResult(response({ contract: {} }))).toBe(false);
   });
 });
 
