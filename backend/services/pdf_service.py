@@ -1,10 +1,10 @@
 import logging
-import re
 
 import fitz
 
 from config.settings import settings
 from services.errors import DocumentError
+from services.text_cleaning import clean_text
 
 logger = logging.getLogger(__name__)
 
@@ -16,20 +16,6 @@ def _validate_pdf(pdf_bytes: bytes) -> None:
 
     if not pdf_bytes:
         raise DocumentError("Uploaded PDF is empty.")
-
-
-def _clean_text(text: str) -> str:
-    """
-    Normalize extracted text.
-    """
-
-    text = re.sub(r"\r\n?", "\n", text)
-
-    text = re.sub(r"[ \t]+", " ", text)
-
-    text = re.sub(r"\n{3,}", "\n\n", text)
-
-    return text.strip()
 
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
@@ -78,7 +64,7 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
 
     full_text = "\n".join(extracted_pages)
 
-    cleaned_text = _clean_text(full_text)
+    cleaned_text = clean_text(full_text)
 
     if not cleaned_text:
         raise DocumentError(
