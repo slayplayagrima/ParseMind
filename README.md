@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/slayplayagrima/ParseMind/actions/workflows/ci.yml/badge.svg)](https://github.com/slayplayagrima/ParseMind/actions/workflows/ci.yml)
 
-AI-powered document intelligence. Upload a contract, a resume or an invoice as a PDF and ParseMind classifies it, then extracts structured data, summaries, risks and recommendations in seconds.
+AI-powered document intelligence. Upload a contract, a resume or an invoice as a PDF, Word (.docx) or text file and ParseMind classifies it, then extracts structured data, summaries, risks and recommendations in seconds.
 
 **Live app:** https://parsemind.vercel.app · **API:** https://parse-mind-haix.vercel.app/health
 
@@ -14,7 +14,7 @@ AI-powered document intelligence. Upload a contract, a resume or an invoice as a
 - **Invoice analysis.** Vendor, customer, line items, tax and totals, plus exact checks that flag line items, subtotals or totals that don't add up.
 - **Entity extraction.** People, organizations, dates, money, locations and technologies across any document.
 - **Fast by design.** Each workflow runs its AI skills in parallel, so an analysis takes about as long as its slowest step.
-- **Safe for public use.** Upload size and page limits, PDF signature checks, per-IP rate limiting, and readable error messages.
+- **Safe for public use.** Upload size, page and length limits, file type checks on the actual bytes, per-IP rate limiting, and readable error messages.
 
 ## Architecture
 
@@ -22,7 +22,7 @@ AI-powered document intelligence. Upload a contract, a resume or an invoice as a
 flowchart LR
     U[React frontend<br/>Vercel] -->|POST /analyze| A[FastAPI<br/>Vercel Functions]
     A --> RL[Rate limiter<br/>Upstash Redis]
-    A --> P[PDF text extraction<br/>PyMuPDF]
+    A --> P[Text extraction<br/>PyMuPDF · DOCX · TXT]
     P --> R[Router agent]
     R -->|contract| CW[Contract workflow]
     R -->|resume| RW[Resume workflow]
@@ -39,7 +39,7 @@ flowchart LR
 - `backend/agents` holds the router agent that picks a workflow.
 - `backend/workflows` holds the contract, resume and invoice pipelines, which fan out to skills in parallel.
 - `backend/skills` holds single-purpose LLM tasks, with prompts in `backend/prompts`.
-- `backend/services` holds the LLM client, PDF extraction and rate limiter.
+- `backend/services` holds the LLM client, PDF, Word and text extraction, and the rate limiter.
 - `frontend/src` holds the React app: upload, loading and results pages.
 
 ## Tech stack
@@ -90,6 +90,7 @@ Backend (`backend/.env`):
 | `LLM_MAX_RETRIES` | No | `2` | Retries with backoff on errors and rate limits |
 | `MAX_UPLOAD_MB` | No | `4` | Upload size limit |
 | `MAX_PDF_PAGES` | No | `50` | Page limit per PDF |
+| `MAX_DOCUMENT_CHARS` | No | `200000` | Length limit for Word and text files |
 | `UPSTASH_REDIS_REST_URL` | No | | Enables rate limiting |
 | `UPSTASH_REDIS_REST_TOKEN` | No | | Enables rate limiting |
 | `RATE_LIMIT_REQUESTS` | No | `10` | Analyses allowed per IP per window |
@@ -105,12 +106,12 @@ Settings are validated at startup, so a missing key or invalid value stops the a
 Every push and pull request runs the full suite on GitHub Actions.
 
 ```bash
-# Backend: 65 tests
+# Backend: 97 tests
 cd backend
 ruff check . && ruff format --check .
 pytest --cov=app --cov=services --cov=workflows --cov=config
 
-# Frontend: 27 tests
+# Frontend: 30 tests
 cd frontend
 npm run lint
 npm run coverage
