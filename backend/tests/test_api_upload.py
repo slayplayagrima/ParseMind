@@ -21,12 +21,24 @@ def test_valid_pdf_is_analyzed(client, pdf_bytes, fake_pipeline):
     assert fake_pipeline == [pdf_bytes]
 
 
-def test_rejects_non_pdf_content_type(client, fake_pipeline):
-    response = upload(client, b"hello", content_type="text/plain", name="notes.txt")
+def test_rejects_unsupported_file_type(client, fake_pipeline):
+    response = upload(client, b"\x89PNG...", content_type="image/png", name="scan.png")
 
     assert response.status_code == 400
-    assert response.json()["error"] == "Only PDF files are supported."
+    assert response.json()["error"] == (
+        "Only PDF, Word (.docx) and text (.txt) files are supported."
+    )
     assert fake_pipeline == []
+
+
+def test_routes_each_file_type_to_its_reader(client, pdf_bytes, fake_pipeline):
+    docx = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+    upload(client, pdf_bytes)
+    upload(client, b"PK\x03\x04rest", content_type=docx, name="cv.docx")
+    upload(client, b"Invoice INV-1", content_type="text/plain", name="invoice.txt")
+
+    assert fake_pipeline.file_types == ["pdf", "docx", "txt"]
 
 
 def test_rejects_file_without_pdf_signature(client, fake_pipeline):
@@ -51,7 +63,7 @@ def test_rejects_oversized_upload(client, monkeypatch, fake_pipeline):
 def test_document_error_is_shown_to_user(client, pdf_bytes, monkeypatch):
     from app.api import routes
 
-    def reject(_: bytes):
+    def reject(*_):
         raise DocumentError("Password-protected PDFs are not supported.")
 
     monkeypatch.setattr(routes, "process_document", reject)
@@ -74,7 +86,7 @@ def test_unexpected_error_stays_generic(pdf_bytes, monkeypatch):
 
     client = TestClient(app, raise_server_exceptions=False)
 
-    def crash(_: bytes):
+    def crash(*_):
         raise RuntimeError("secret internal detail")
 
     monkeypatch.setattr(routes, "process_document", crash)

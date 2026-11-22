@@ -51,10 +51,16 @@ def fake_pipeline(monkeypatch):
     Replace the Groq-backed pipeline with a stub that records its input.
     """
 
-    calls = []
+    class Calls(list):
+        # The uploaded bytes, plus which reader each upload was routed to.
+        file_types: list
 
-    def fake_process_document(data: bytes):
+    calls = Calls()
+    calls.file_types = []
+
+    def fake_process_document(data: bytes, file_type=None):
         calls.append(data)
+        calls.file_types.append(file_type)
         return {"workflow": "contract_workflow"}
 
     monkeypatch.setattr(routes, "process_document", fake_process_document)

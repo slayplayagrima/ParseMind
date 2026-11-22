@@ -93,7 +93,7 @@ def test_rate_limit_returns_429_to_user(pdf_bytes, monkeypatch):
     from app.api import routes
     from app.main import app
 
-    def limited(_: bytes):
+    def limited(*_):
         raise RuntimeError("RATE_LIMIT_EXCEEDED")
 
     monkeypatch.setattr(routes, "process_document", limited)

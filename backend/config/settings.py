@@ -53,6 +53,10 @@ class Settings(BaseSettings):
 
     MAX_PDF_PAGES: int = Field(default=50, gt=0)
 
+    # Word and text files have no pages, so they are limited by length.
+    # 200k characters is roughly 50 dense pages.
+    MAX_DOCUMENT_CHARS: int = Field(default=200_000, gt=0)
+
     UPSTASH_REDIS_REST_URL: str = ""
 
     UPSTASH_REDIS_REST_TOKEN: str = ""
