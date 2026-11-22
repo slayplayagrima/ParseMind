@@ -54,7 +54,7 @@ const supportedHandlers = [
   { icon: ReceiptText, title: 'Invoices', description: 'Finance & billing', active: true },
   { icon: FileText, title: 'Reports', description: 'Research & business', active: true },
   { icon: ShieldCheck, title: 'Policies', description: 'Compliance & HR', active: true },
-  { icon: Building2, title: 'Real Estate', description: 'Coming Soon', active: false },
+  { icon: Building2, title: 'Real Estate', description: 'Leases & deeds, as contracts', active: true },
 ];
 
 export const LandingPage = () => (
