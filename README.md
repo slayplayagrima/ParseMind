@@ -4,7 +4,7 @@
 
 AI-powered document intelligence. Upload a contract or a resume as a PDF and ParseMind classifies it, then extracts structured data, summaries, risks and recommendations in seconds.
 
-**Live app:** https://parsemind.vercel.app
+**Live app:** https://parsemind.vercel.app · **API:** https://parse-mind-haix.vercel.app/health
 
 ## Features
 
@@ -27,7 +27,7 @@ flowchart LR
     R -->|resume| RW[Resume workflow]
     CW --> S1[summarize · parse · entities · clauses · risks]
     RW --> S2[summarize · parse · entities]
-    S1 --> G[Groq LLM<br/>Llama 3.3 70B]
+    S1 --> G[Groq LLM<br/>GPT-OSS 120B]
     S2 --> G
 ```
 
@@ -44,7 +44,7 @@ flowchart LR
 | --- | --- |
 | Frontend | React 18, TypeScript, Vite, MUI, Tailwind CSS, React Router, Axios |
 | Backend | Python 3.13, FastAPI, Pydantic, pydantic-settings, PyMuPDF |
-| AI | Groq API, Llama 3.3 70B |
+| AI | Groq API, GPT-OSS 120B (`openai/gpt-oss-120b`) |
 | Infrastructure | Vercel (frontend and serverless backend), Upstash Redis |
 | Quality | pytest, Vitest, Testing Library, ruff, ESLint, GitHub Actions |
 
@@ -80,7 +80,8 @@ Backend (`backend/.env`):
 | Variable | Required | Default | Purpose |
 | --- | --- | --- | --- |
 | `GROQ_API_KEY` | Yes | | Groq API key |
-| `GROQ_MODEL` | No | `llama-3.3-70b-versatile` | Model used by every skill |
+| `GROQ_MODEL` | No | `openai/gpt-oss-120b` | Model used by every skill |
+| `LLM_MAX_TOKENS` | No | `8192` | Max output tokens per call; reasoning models need room to think |
 | `LLM_TIMEOUT_SECONDS` | No | `30` | Timeout per LLM call |
 | `LLM_MAX_RETRIES` | No | `2` | Retries with backoff on errors and rate limits |
 | `MAX_UPLOAD_MB` | No | `4` | Upload size limit |
